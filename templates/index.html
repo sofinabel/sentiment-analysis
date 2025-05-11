@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+        }
+        .positive {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .negative {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Sentiment Analysis</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="text">Enter text:</label>
+                <textarea class="form-control" id="text" name="text" rows="3" required>{{ text if text else '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="model">Choose a model:</label>
+                <select class="form-control" id="model" name="model">
+                    <option value="nb" {% if model_type == 'nb' %}selected{% endif %}>Naive Bayes</option>
+                    <option value="lstm" {% if model_type == 'lstm' %}selected{% endif %}>LSTM</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Analyze Sentiment</button>
+        </form>
+        {% if sentiment %}
+            <div class="result {{ 'positive' if sentiment == 'Positive' else 'negative' }}">
+                <h4>Sentiment: {{ sentiment }}</h4>
+                <p>Probability: {{ probability * 100 | round(2) }}%</p>
+            </div>
+        {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Сохраняем значение текстового поля в локальном хранилище при отправке формы
+        document.addEventListener('DOMContentLoaded', function() {
+            var textInput = document.getElementById('text');
+            textInput.value = localStorage.getItem('text') || '';
+            textInput.addEventListener('input', function() {
+                localStorage.setItem('text', textInput.value);
+            });
+        });
+    </script>
+</body>
+</html>
